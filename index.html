@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Anant Singh Suryawanshi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=DM+Sans:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            overflow: hidden; /* This is the key to preventing scrolling */
+            font-family: 'Poppins', sans-serif;
+            background-color: #1a1a2e; /* Dark purple/blue background */
+            color: #ffffff;
+        }
+
+        nav a {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+        }
+        
+        /* All sections will be fixed and hidden by default */
+        .page-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-color: #1c1c30;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0s 0.5s;
+        }
+
+        /* The targeted section will be visible */
+        .page-section:target {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* The home section is visible by default (when no target is set) */
+        .page-section:first-of-type {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .fade-in {
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hero-image-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-arc {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110%;
+            height: 110%;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-right-color: #55ff70;
+            border-bottom-color: #55ff70;
+            z-index: 5;
+            transform-origin: 50% 50%;
+            animation: spin 8s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .animate-fade-in-scale {
+            animation: fadeInScale 1s ease-out forwards;
+        }
+
+        .info-card {
+            background-color: #2b2b48;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border: 2px solid #006400;
+            box-shadow: 0 0 20px #006400, 0 10px 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: moveGradient 10s linear infinite;
+        }
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+        @keyframes moveGradient {
+            0% { top: -100%; left: -100%; }
+            25% { top: -100%; left: 0%; }
+            50% { top: 0%; left: 0%; }
+            75% { top: 0%; left: -100%; }
+            100% { top: -100%; left: -100%; }
+        }
+
+        .download-button {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: color 0.4s ease-in-out;
+        }
+        .download-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: #55ff70;
+            transition: left 0.4s ease-in-out;
+            z-index: -1;
+        }
+        .download-button:hover::before {
+            left: 0;
+        }
+        .download-button:hover {
+            color: #1a1a2e;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .project-card {
+            background-color: #2b2b48;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 0 15px rgba(0, 100, 0, 0.5);
+            cursor: pointer;
+        }
+        .project-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 100, 0, 0.8), 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* New styles for Services and Contact pages */
+        .glowing-card {
+            background-color: #2b2b48;
+            border-radius: 1rem;
+            padding: 2rem;
+            border: 2px solid #55ff70;
+            box-shadow: 0 0 15px #55ff70, 0 0 25px #55ff70 inset;
+            animation: glowing-pulse 2s infinite ease-in-out;
+            transition: transform 0.3s ease-in-out;
+        }
+        .glowing-card:hover {
+            transform: translateY(-8px);
+        }
+
+        @keyframes glowing-pulse {
+            0% { box-shadow: 0 0 15px #55ff70, 0 0 25px #55ff70 inset; }
+            50% { box-shadow: 0 0 25px #55ff70, 0 0 40px #55ff70 inset; }
+            100% { box-shadow: 0 0 15px #55ff70, 0 0 25px #55ff70 inset; }
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            background-color: #1a1a2e;
+            border: 2px solid #55ff70;
+            color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 5px #55ff70;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #55ff70;
+            box-shadow: 0 0 15px #55ff70;
+        }
+
+        .contact-button {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .contact-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: #55ff70;
+            transition: left 0.4s ease-in-out;
+            z-index: -1;
+        }
+        .contact-button:hover::before {
+            left: 0;
+        }
+        .contact-button:hover {
+            color: #1a1a2e;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <header class="fixed top-0 left-0 w-full z-50 p-4 lg:px-12 flex justify-between items-center bg-transparent">
+        <div class="text-xl font-bold text-gray-300">Portfolio.</div>
+        <nav class="hidden lg:flex items-center space-x-8 text-lg">
+            <a href="#home" class="text-white hover:text-green-400 transition-colors duration-300">Home</a>
+            <a href="#about" class="text-white hover:text-green-400 transition-colors duration-300">About</a>
+            <a href="#portfolio" class="text-white hover:text-green-400 transition-colors duration-300">Portfolio</a>
+            <a href="#services" class="text-white hover:text-green-400 transition-colors duration-300">Service</a>
+            <a href="#contact" class="text-white hover:text-green-400 transition-colors duration-300">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Home Section (Visible by default) -->
+    <section id="home" class="page-section">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div class="space-y-6 fade-in text-center lg:text-left">
+                <h2 class="text-xl md:text-2xl font-semibold text-white">I'm a <span class="text-green-400 font-bold">Student and Developer</span></h2>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white">
+                    Anant Singh Suryawanshi
+                </h1>
+                <div class="flex flex-wrap gap-2 text-md md:text-lg font-medium text-white justify-center lg:justify-start">
+                    <span class="bg-gray-800 rounded-full px-4 py-1">Student</span>
+                    <span class="bg-gray-800 rounded-full px-4 py-1">Creator</span>
+                    <span class="bg-gray-800 rounded-full px-4 py-1">Cricketer</span>
+                </div>
+                <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-lg mx-auto lg:mx-0">
+                    Hello! My name is Anant Singh Suryawanshi. I live in Gondia, and I'm a student who loves to create things and play cricket. I'm excited to share my journey with you.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#contact" class="download-button bg-green-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-green-600 transition-colors duration-300">
+                        Download CV
+                    </a>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-green-400 transition-colors duration-300">
+                            <i class="fab fa-youtube text-lg text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-green-400 transition-colors duration-300">
+                            <i class="fab fa-linkedin-in text-lg text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-green-400 transition-colors duration-300">
+                            <i class="fab fa-twitter text-lg text-white"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center items-center fade-in">
+                <div class="hero-image-container">
+                    <img src="https://placehold.co/500x500/1a1a2e/ffffff?text=Anant" alt="Anant Singh Suryawanshi" class="hero-image shadow-lg">
+                    <div class="hero-arc"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="page-section">
+        <div class="max-w-6xl mx-auto text-center space-y-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white animate-fade-in-scale">About Me</h2>
+            <div class="about-grid">
+                <div class="info-card animate-fade-in-scale" style="animation-delay: 0.2s;">
+                    <h3 class="text-2xl font-bold mb-2 text-green-400">Personal Details</h3>
+                    <p class="text-lg text-gray-400 leading-relaxed">
+                        I am **10 years old** and studying in **7th class**. I live in **Gondia**, and my hobbies are **playing cricket and reading books**.
+                    </p>
+                </div>
+                <div class="info-card animate-fade-in-scale" style="animation-delay: 0.4s;">
+                    <h3 class="text-2xl font-bold mb-2 text-green-400">Family</h3>
+                    <p class="text-lg text-gray-400 leading-relaxed">
+                        My mother's name is **Priti Suryawanshi**, my father's name is **Uttam Singh Suryawanshi**, and my brother's name is **Shaurya Singh Suryawanshi**.
+                    </p>
+                </div>
+                <div class="info-card animate-fade-in-scale" style="animation-delay: 0.6s;">
+                    <h3 class="text-2xl font-bold mb-2 text-green-400">Education & Friends</h3>
+                    <p class="text-lg text-gray-400 leading-relaxed">
+                        I attend **Jamanaben Manilal Vasant English Primary School**. My best friends are **Naval, Parth, and Viraj**.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="page-section">
+        <div class="max-w-6xl mx-auto text-center space-y-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white">My Portfolio</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                <div class="project-card animate-fade-in-scale" style="animation-delay: 0.2s;">
+                    <img src="https://placehold.co/500x300/1a1a2e/ffffff?text=Project+1" alt="Project 1" class="w-full h-auto">
+                    <div class="p-1 text-left">
+                        <h3 class="text-lg font-semibold mb-1 text-green-400">Project 1: My First Website</h3>
+                        <p class="text-xs text-gray-400 mb-1">A simple website I built using HTML and CSS to learn the basics of web development.</p>
+                        <a href="#project-details-1" class="inline-block bg-green-500 text-white font-bold py-1 px-3 text-sm rounded-full hover:bg-green-600 transition-colors duration-300">View Project</a>
+                    </div>
+                </div>
+                <div class="project-card animate-fade-in-scale" style="animation-delay: 0.4s;">
+                    <img src="https://placehold.co/500x300/1a1a2e/ffffff?text=Project+2" alt="Project 2" class="w-full h-auto">
+                    <div class="p-1 text-left">
+                        <h3 class="text-lg font-semibold mb-1 text-green-400">Project 2: My First Game</h3>
+                        <p class="text-xs text-gray-400 mb-1">A fun, small game I created with JavaScript and HTML canvas to practice my programming skills.</p>
+                        <a href="#project-details-2" class="inline-block bg-green-500 text-white font-bold py-1 px-3 text-sm rounded-full hover:bg-green-600 transition-colors duration-300">View Project</a>
+                    </div>
+                </div>
+                <div class="project-card animate-fade-in-scale" style="animation-delay: 0.6s;">
+                    <img src="https://placehold.co/500x300/1a1a2e/ffffff?text=Project+3" alt="Project 3" class="w-full h-auto">
+                    <div class="p-1 text-left">
+                        <h3 class="text-lg font-semibold mb-1 text-green-400">Project 3: My Blog</h3>
+                        <p class="text-xs text-gray-400 mb-1">A personal blog where I share stories about my hobbies, including cricket and reading books.</p>
+                        <a href="#project-details-3" class="inline-block bg-green-500 text-white font-bold py-1 px-3 text-sm rounded-full hover:bg-green-600 transition-colors duration-300">View Project</a>
+                    </div>
+                </div>
+                <div class="project-card animate-fade-in-scale" style="animation-delay: 0.8s;">
+                    <img src="https://placehold.co/500x300/1a1a2e/ffffff?text=Project+4" alt="Project 4" class="w-full h-auto">
+                    <div class="p-1 text-left">
+                        <h3 class="text-lg font-semibold mb-1 text-green-400">Project 4: School Project</h3>
+                        <p class="text-xs text-gray-400 mb-1">A project I worked on for school, using my creativity to present information in a new way.</p>
+                        <a href="#project-details-4" class="inline-block bg-green-500 text-white font-bold py-1 px-3 text-sm rounded-full hover:bg-green-600 transition-colors duration-300">View Project</a>
+                    </div>
+                </div>
+                <div class="project-card animate-fade-in-scale" style="animation-delay: 1.0s;">
+                    <img src="https://placehold.co/500x300/1a1a2e/ffffff?text=Project+5" alt="Project 5" class="w-full h-auto">
+                    <div class="p-1 text-left">
+                        <h3 class="text-lg font-semibold mb-1 text-green-400">Project 5: Cricket App</h3>
+                        <p class="text-xs text-gray-400 mb-1">An idea for a simple cricket score tracker app that I started building for fun.</p>
+                        <a href="#project-details-5" class="inline-block bg-green-500 text-white font-bold py-1 px-3 text-sm rounded-full hover:bg-green-600 transition-colors duration-300">View Project</a>
+                    </div>
+                </div>
+                <div class="project-card animate-fade-in-scale" style="animation-delay: 1.2s;">
+                    <img src="https://placehold.co/500x300/1a1a2e/ffffff?text=Project+6" alt="Project 6" class="w-full h-auto">
+                    <div class="p-1 text-left">
+                        <h3 class="text-lg font-semibold mb-1 text-green-400">Project 6: E-Book Website</h3>
+                        <p class="text-xs text-gray-400 mb-1">A simple static website designed to showcase my favorite books and authors.</p>
+                        <a href="#project-details-6" class="inline-block bg-green-500 text-white font-bold py-1 px-3 text-sm rounded-full hover:bg-green-600 transition-colors duration-300">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Project Detail Sections -->
+    <section id="project-details-1" class="page-section">
+        <div class="max-w-4xl mx-auto text-center space-y-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white">Project 1: My First Website</h2>
+            <p class="text-lg text-gray-400 leading-relaxed">
+                This project was my introduction to the world of web development. I used fundamental HTML for structure and CSS for styling to build a basic personal website. It was a great learning experience for understanding how different elements work together on a web page.
+            </p>
+            <a href="#portfolio" class="inline-block text-green-400 hover:text-green-300 transition-colors duration-300">&larr; Back to Portfolio</a>
+        </div>
+    </section>
+
+    <section id="project-details-2" class="page-section">
+        <div class="max-w-4xl mx-auto text-center space-y-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white">Project 2: My First Game</h2>
+            <p class="text-lg text-gray-400 leading-relaxed">
+                For this project, I dove into JavaScript to create a simple interactive game. Using the HTML canvas, I learned about game loops, user input, and basic animation. It was a fun challenge that helped me develop my problem-solving skills.
+            </p>
+            <a href="#portfolio" class="inline-block text-green-400 hover:text-green-300 transition-colors duration-300">&larr; Back to Portfolio</a>
+        </div>
+    </section>
+    
+    <section id="project-details-3" class="page-section">
+        <div class="max-w-4xl mx-auto text-center space-y-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white">Project 3: My Blog</h2>
+            <p class="text-lg text-gray-400 leading-relaxed">
+                This blog project was a way to combine my coding skills with my love for writing. I created a personal space to share my interests, including my passion for cricket and the books I've read. It helped me practice content organization and presentation.
+            </p>
+            <a href="#portfolio" class="inline-block text-green-400 hover:text-green-300 transition-colors duration-300">&larr; Back to Portfolio</a>
+        </div>
+    </section>
+
+    <section id="project-details-4" class="page-section">
+        <div class="max-w-4xl mx-auto text-center space-y-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white">Project 4: School Project</h2>
+            <p class="text-lg text-gray-400 leading-relaxed">
+                This project was a special school assignment that allowed me to use my creativity. I designed and built an interactive presentation that showcased information in a new way, earning me a good grade and recognition from my teachers.
+            </p>
+            <a href="#portfolio" class="inline-block text-green-400 hover:text-green-300 transition-colors duration-300">&larr; Back to Portfolio</a>
+        </div>
+    </section>
+
+    <section id="project-details-5" class="page-section">
+        <div class="max-w-4xl mx-auto text-center space-y-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white">Project 5: Cricket App</h2>
+            <p class="text-lg text-gray-400 leading-relaxed">
+                Being a cricket fan, I decided to start a project to build a simple score tracker app. While still a work in progress, this project has taught me a lot about data handling and user interface design for mobile-first applications.
+            </p>
+            <a href="#portfolio" class="inline-block text-green-400 hover:text-green-300 transition-colors duration-300">&larr; Back to Portfolio</a>
+        </div>
+    </section>
+    
+    <section id="project-details-6" class="page-section">
+        <div class="max-w-4xl mx-auto text-center space-y-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white">Project 6: E-Book Website</h2>
+            <p class="text-lg text-gray-400 leading-relaxed">
+                This project was a fun exercise in creating a static website to showcase my favorite books and authors. I focused on clean design and an intuitive user experience, ensuring the site was easy to navigate for any book lover.
+            </p>
+            <a href="#portfolio" class="inline-block text-green-400 hover:text-green-300 transition-colors duration-300">&larr; Back to Portfolio</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="page-section">
+        <div class="max-w-6xl mx-auto text-center space-y-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white animate-fade-in-scale">My Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                <!-- Service 1 -->
+                <div class="glowing-card">
+                    <div class="flex flex-col items-center space-y-4">
+                        <i class="fas fa-laptop-code text-5xl text-green-400"></i>
+                        <h3 class="text-2xl font-bold text-white">Web Development</h3>
+                        <p class="text-center text-gray-300">I create **responsive and visually appealing websites** from scratch using fundamental web technologies like HTML, CSS, and JavaScript. My focus is on building clean, simple, and effective web pages that work well on any device.</p>
+                    </div>
+                </div>
+                <!-- Service 2 -->
+                <div class="glowing-card">
+                    <div class="flex flex-col items-center space-y-4">
+                        <i class="fas fa-gamepad text-5xl text-green-400"></i>
+                        <h3 class="text-2xl font-bold text-white">Game Creation</h3>
+                        <p class="text-center text-gray-300">I enjoy building fun, small-scale interactive games using the **HTML canvas and JavaScript**. These projects help me explore game logic, animation, and user interaction in a creative way.</p>
+                    </div>
+                </div>
+                <!-- Service 3 -->
+                <div class="glowing-card">
+                    <div class="flex flex-col items-center space-y-4">
+                        <i class="fas fa-pen-nib text-5xl text-green-400"></i>
+                        <h3 class="text-2xl font-bold text-white">Creative Writing</h3>
+                        <p class="text-center text-gray-300">I offer writing services for a variety of topics, including **personal blogs, short stories, and project summaries**. I focus on clear and engaging content that tells a compelling story about my experiences and hobbies.</p>
+                    </div>
+                </div>
+                <!-- Service 4 -->
+                <div class="glowing-card">
+                    <div class="flex flex-col items-center space-y-4">
+                        <i class="fas fa-cricket-bat-ball text-5xl text-green-400"></i>
+                        <h3 class="text-2xl font-bold text-white">Cricket Insights</h3>
+                        <p class="text-center text-gray-300">As a passionate cricketer, I provide insights into the game. This includes **match analysis, player statistics, and commentary on major tournaments**. It's a way for me to share my passion and knowledge with others.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="page-section">
+        <div class="max-w-4xl mx-auto text-center space-y-8">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white animate-fade-in-scale">Get in Touch</h2>
+            <p class="text-lg text-gray-400 leading-relaxed">I would love to hear from you! Please feel free to reach out to me with any questions or collaboration ideas.</p>
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-8">
+                <!-- Contact Info Card -->
+                <div class="glowing-card w-full md:w-1/2">
+                    <h3 class="text-2xl font-bold mb-4 text-green-400">My Contact Info</h3>
+                    <div class="text-left space-y-4 text-gray-300">
+                        <p><i class="fas fa-envelope text-green-400"></i> Email: anantsuryawanshi@email.com</p>
+                        <p><i class="fas fa-phone-alt text-green-400"></i> Phone: +91 12345 67890</p>
+                        <p><i class="fas fa-map-marker-alt text-green-400"></i> Location: Gondia, Maharashtra, India</p>
+                    </div>
+                </div>
+                <!-- Contact Form -->
+                <div class="glowing-card w-full md:w-1/2">
+                    <h3 class="text-2xl font-bold mb-4 text-green-400">Send Me a Message</h3>
+                    <form class="contact-form space-y-4">
+                        <div>
+                            <input type="text" placeholder="Your Name" class="w-full">
+                        </div>
+                        <div>
+                            <input type="email" placeholder="Your Email" class="w-full">
+                        </div>
+                        <div>
+                            <textarea placeholder="Your Message" rows="4" class="w-full"></textarea>
+                        </div>
+                        <button type="submit" class="contact-button w-full bg-green-500 text-white font-bold py-3 px-8 rounded-full hover:bg-green-600 transition-colors duration-300">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
